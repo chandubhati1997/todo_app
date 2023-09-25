@@ -6,6 +6,15 @@ const bodyParser = require("body-parser")
 
 app.use(bodyParser.json());
 
+function findIndex(arr,id){
+  for(let i=0;i<arr.length;i++){
+    if(arr[i].id===id) return i;
+    
+
+  }
+  return -1;
+}
+
 
 
 
@@ -15,6 +24,23 @@ app.get('/todo', (req, res) => {
     if(err) throw err;
     res.json(JSON.parse(data));
   })
+})
+
+app.get("/todo/:id",(req,res) => {
+  fs.readFile("todo.json","utf-8",(err,data) =>{
+    const todos =JSON.parse(data)
+    const todoindex =findIndex(todos,parseInt(req.params.id));
+    if(todoindex=== -1){
+      res.status(404).send();
+    }else{
+      res.json(todos[todoindex]);
+
+    }
+  })
+
+
+
+
 })
 
 app.post('/todo',(req,res) => {
