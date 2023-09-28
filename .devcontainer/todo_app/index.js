@@ -18,6 +18,9 @@ function findIndex(arr,id){
 
 
 
+
+
+
 app.get('/todo', (req, res) => {
 
   fs.readFile("todo.json","utf-8",(err,data) =>  {
@@ -28,6 +31,10 @@ app.get('/todo', (req, res) => {
 
 app.get("/todo/:id",(req,res) => {
   fs.readFile("todo.json","utf-8",(err,data) =>{
+
+
+    if (err) throw err;
+
     const todos =JSON.parse(data)
     const todoindex =findIndex(todos,parseInt(req.params.id));
     if(todoindex=== -1){
@@ -69,6 +76,27 @@ app.post('/todo',(req,res) => {
 
 
 
+
+
+app.delete("/todo/:id",(req,res) => {
+   fs.readFile("todo.json",(err,data)  =>  {
+      if (err) throw err;
+      const todos= JSON.parse(data);
+      const todoindex=findIndex(todos,parseInt(req.params.id));
+      if(todoindex===-1){
+        res.status(404).send()
+      }
+      else{
+        todos=removeAtIndex(todos,todoindex);
+        res.status(201).send();
+        
+      }
+
+   } )
+
+
+
+})
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
